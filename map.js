@@ -58,15 +58,28 @@ function initMap() {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
 
-  var infowindow = new google.maps.InfoWindow();
 
-  var marker, i;
+  var marker, i, markerContent, 
+    infowindow = new google.maps.InfoWindow();
 
   for (i = 0; i < worldMapData.length; i++) {  
     marker = new google.maps.Marker({
       position: new google.maps.LatLng(worldMapData[i].latitude, worldMapData[i].longitude),
       map: map
     });
+
+  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+    return function() {
+      markerContent = '<div><b>Hotel Name: </b> ' +
+        worldMapData[i].hotelName +
+        '</div><div><b>Address: </b>' +
+        worldMapData[i].address + '</div>'; 
+      
+      infowindow.setContent(markerContent);
+      infowindow.open(map, marker);
+    }
+  })(marker, i));
+
   }
 
 }
